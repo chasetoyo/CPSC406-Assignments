@@ -11,7 +11,7 @@ The function should calculate a = b * c. The sizes of the three arrays should sa
 ### Files
 - [`bigMult.c`](bigMult.c) (>64 bit multiplication)
 
-### Notes
+#### Notes
 When testing multiplication with various numbers, it is important to note that the arrays are interpreted as right to left. Hence,
 ```c
 uint64_t bs[2] = {0xFFDDCCAA,0x12345678};
