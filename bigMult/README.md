@@ -2,7 +2,10 @@
 ## Chase Toyofuku-Souza
 
 ## About
-The main task for this assignment is to implement a big natural number multiplication following the prototype *void bigmul64(uint64_t a[], int sz_a, uint64_t b[], sz_b, uint64_t c[], int sz_c);*
+The main task for this assignment is to implement a big natural number multiplication following the prototype 
+```c
+void bigmul64(uint64_t a[], int sz_a, uint64_t b[], sz_b, uint64_t c[], int sz_c);
+```
 The function should calculate a = b * c. The sizes of the three arrays should satisfy sz_a >= sz_b + sz_c.
 
 ### Files
