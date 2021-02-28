@@ -3,9 +3,17 @@
 #include <stdint.h>
 #include <limits.h>
 
-void print_result(uint8_t as[], int sz_a) {
+void print_result(uint16_t as[], int sz_a) {
 	// printf("res: ");
 	for (int i = sz_a - 1; i >= 0; --i) {
+		printf("%04x", as[i]);
+	}
+	printf("\n");
+}
+
+void print_result2(uint8_t as[], int sz_a) {
+	// printf("res: ");
+	for (int i = sz_a - 2; i >= 0; --i) {
 		printf("%02x ", as[i]);
 	}
 	printf("\n");
@@ -69,10 +77,12 @@ void partialprod16(uint8_t as[], int sz_a, uint8_t bs[], int sz_b, uint8_t d, in
 	uint8_t c = 0;
 	uint16_t p;
 	for (i=0; i< sz_b; i++) {
+		printf("as: %02x + ds %02x * bs: %02x + %04x c\n", as[i+iter],d,bs[i],c);
 		p = (uint16_t) as[i+iter] + (uint16_t) d * (uint16_t) bs[i] + (uint16_t) c; // p is a 9 bit value
+		printf("p: %04x\n", (uint8_t) p);
 		c = p >> 8;
 		as[i+iter] = (uint8_t) p;
-		print_result(as, sz_a);
+		print_result2(as, sz_a);
 	}
 	// responsible for propogating carry
 	for ( ; i< sz_a; i++) {
@@ -82,7 +92,8 @@ void partialprod16(uint8_t as[], int sz_a, uint8_t bs[], int sz_b, uint8_t d, in
 	}
 
 	printf("----result-----\n");
-	print_result(as, sz_a);
+	print_result2(as, sz_a);
+	printf("--------------\n");
 }
 
 void bigmul32(uint16_t a[], int sz_a, uint16_t b[], int sz_b, uint16_t c[], int sz_c) {
@@ -93,21 +104,21 @@ void bigmul32(uint16_t a[], int sz_a, uint16_t b[], int sz_b, uint16_t c[], int 
 	uint8_t *c_8 = (uint8_t *) c;
 
 	// iterate over all "columns" of c
-	for (int i = 0; i < 2; ++i) {
-		printf("----start-----\n");
-		printf("a:%02x,b:%02x,c:%02x\n", a_8[i],b_8[i],c_8[i]);
+	for (int i = 0; i < sz_c*2; ++i) {
 		partialprod16(a_8, sz_a*2, b_8, sz_b*2, c_8[i], i);
 	}
 }
 
 int main(int argc, char const *argv[])
 {
-	uint16_t as[2] = {0x0000,0x0000};
-	uint16_t bs[1] = {0xFFFF};
-	uint16_t cs[1] = {0xFFFF};
-	bigmul32(as,2,bs,1,cs,1);
+	uint16_t as[4] = {0x0,0x0,0x0,0x0};
+	uint16_t bs[2] = {0x322F,0xC};
+	uint16_t cs[2] = {0x1,0x2356};
+	bigmul32(as,4,bs,2,cs,2);
 
+	printf("correct: ");
+	print_result(as, 4);
 	// confirm the results
-	printf("correct: %08lx\n", (uint64_t) 0xFFFF * (uint64_t) 0xFFFF);
+	printf("correct: %016lx\n", (uint64_t) 0x000C322F* (uint64_t) 0x23560001);
 	return 0;
 }
